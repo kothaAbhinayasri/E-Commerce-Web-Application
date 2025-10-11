@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import api from '../../api/axios'
+import { showNotification } from './notificationSlice'
 
 export const fetchCart = createAsyncThunk(
   'cart/fetchCart',
@@ -91,6 +92,7 @@ const slice = createSlice({
         state.items = action.payload
         state.loading = false
         localStorage.setItem('ecom_cart', JSON.stringify(state.items))
+        thunkAPI.dispatch(showNotification({ message: 'Product added to cart successfully!', severity: 'success' }))
       })
       .addCase(addToCartAsync.rejected, (state, action) => {
         state.loading = false

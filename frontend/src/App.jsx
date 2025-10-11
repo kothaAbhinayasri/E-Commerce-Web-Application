@@ -132,6 +132,8 @@ import { Routes, Route, Link, Navigate, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { logoutUser, fetchCurrentUser } from "./store/slices/authSlice";
+import { Snackbar, Alert } from "@mui/material";
+import { hideNotification } from "./store/slices/notificationSlice";
 
 // Pages
 import Home from "./pages/Home.jsx";
@@ -153,6 +155,7 @@ function ProtectedRoute({ children, role }) {
 export default function App() {
   const user = useSelector((s) => s.auth.user);
   const cartCount = useSelector((s) => s.cart.items.length);
+  const notification = useSelector((s) => s.notification);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -165,6 +168,10 @@ export default function App() {
     dispatch(logoutUser());
     navigate("/");
   }
+
+  const handleCloseNotification = () => {
+    dispatch(hideNotification());
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900">
@@ -232,6 +239,18 @@ export default function App() {
           />
         </Routes>
       </div>
+
+      {/* Notification Snackbar */}
+      <Snackbar
+        open={notification.open}
+        autoHideDuration={4000}
+        onClose={handleCloseNotification}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={handleCloseNotification} severity={notification.severity} sx={{ width: '100%' }}>
+          {notification.message}
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

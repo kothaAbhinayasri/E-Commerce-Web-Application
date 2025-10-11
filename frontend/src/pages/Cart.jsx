@@ -1,6 +1,7 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { useEffect, useState } from 'react'
 import { removeFromCart, updateQty, clearCart, fetchCart, removeFromCartAsync } from '../store/slices/cartSlice.js'
+import { showNotification } from '../store/slices/notificationSlice.js'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { formatCurrency } from "../utils/formatCurrency"
@@ -74,6 +75,7 @@ export default function Cart() {
       })
       // Email sent automatically
       dispatch(clearCart())
+      dispatch(showNotification({ message: 'Order placed and payment successful! Receipt sent to your email.', severity: 'success' }))
       navigate('/orders')
     } catch (err) {
       alert('Checkout failed: ' + (err.response?.data?.message || 'Unknown error'))
